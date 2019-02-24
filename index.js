@@ -64,6 +64,12 @@ if (require.main === module) {
         // eslint-disable-next-line no-console
         console.warn('Duplicate: %s', duplicate);
       });
+      if (
+        duplicates.length &&
+        process.env.npm_lifecycle_event === 'postinstall'
+      ) {
+        process.exit(1);
+      }
     })
     .catch(function(error) {
       // eslint-disable-next-line no-console
