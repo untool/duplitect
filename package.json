@@ -1,0 +1,109 @@
+{
+  "name": "duplitect",
+  "version": "0.0.1",
+  "description": "Package Duplicate Detector",
+  "main": "index.js",
+  "bin": "index.js",
+  "scripts": {
+    "test": "ava --verbose",
+    "lint": "eslint --ignore-path .gitignore '**/*.js'",
+    "fmt": "prettier --write --ignore-path .gitignore '**/*.js'",
+    "release": "standard-version",
+    "update": "yarn upgrade-interactive --latest",
+    "reset": "git clean -dfx && yarn",
+    "postrelease": "git push --follow-tags; npm publish"
+  },
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org/"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/untool/duplitect.git"
+  },
+  "author": "dmbch",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/untool/duplitect/issues"
+  },
+  "homepage": "https://github.com/untool/duplitect#readme",
+  "devDependencies": {
+    "@commitlint/cli": "^7.0.0",
+    "@commitlint/config-conventional": "^7.0.0",
+    "@commitlint/travis-cli": "^7.0.0",
+    "ava": "^0.25.0",
+    "cz-conventional-changelog": "^2.1.0",
+    "eslint": "^5.0.0",
+    "eslint-config-prettier": "^3.0.0",
+    "eslint-plugin-prettier": "^3.0.0",
+    "husky": "^1.0.0",
+    "lint-staged": "^8.0.0",
+    "prettier": "^1.13.4",
+    "standard-version": "^4.2.0"
+  },
+  "renovate": {
+    "extends": [
+      "config:base"
+    ],
+    "ignoreDeps": [
+      "prettier"
+    ],
+    "lockFileMaintenance": {
+      "enabled": true
+    },
+    "pinVersions": false,
+    "prCreation": "not-pending",
+    "semanticCommits": true,
+    "semanticPrefix": "chore:"
+  },
+  "prettier": {
+    "trailingComma": "es5",
+    "singleQuote": true,
+    "proseWrap": "never"
+  },
+  "eslintConfig": {
+    "extends": [
+      "eslint:recommended",
+      "prettier"
+    ],
+    "plugins": [
+      "prettier"
+    ],
+    "rules": {
+      "prettier/prettier": "error"
+    },
+    "env": {
+      "node": true
+    },
+    "globals": {
+      "Promise": true
+    }
+  },
+  "lint-staged": {
+    "*.js": [
+      "prettier --write",
+      "git add"
+    ]
+  },
+  "commitlint": {
+    "extends": [
+      "@commitlint/config-conventional"
+    ],
+    "rules": {
+      "scope-empty": [
+        2,
+        "always"
+      ]
+    }
+  },
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-conventional-changelog"
+    }
+  },
+  "husky": {
+    "hooks": {
+      "commit-msg": "commitlint -e $GIT_PARAMS",
+      "pre-commit": "lint-staged"
+    }
+  }
+}
