@@ -5,6 +5,8 @@ var execFile = require('child_process').execFile;
 var sep = require('path').sep;
 var eol = require('os').EOL;
 
+var cwd = process.env.INIT_CWD || process.cwd();
+
 function normalize(path) {
   return path
     .replace(new RegExp(sep, 'g'), '/')
@@ -24,7 +26,7 @@ function match(strings, patterns) {
 
 function getAllDependencies() {
   return new Promise(function(resolve, reject) {
-    execFile('npm', ['ls', '--parseable'], function(error, stdout, stderr) {
+    function handleResult(error, stdout, stderr) {
       if (stdout) {
         resolve(stdout.split(eol).map(normalize));
       } else if (stderr) {
@@ -32,7 +34,8 @@ function getAllDependencies() {
       } else {
         reject(error);
       }
-    });
+    }
+    execFile('npm', ['ls', '--parseable'], { cwd: cwd }, handleResult);
   });
 }
 
@@ -49,10 +52,10 @@ function getAllDuplicates() {
 }
 
 function getDuplicates() {
-  var args = Array.prototype.slice.call(arguments);
-  var patterns = args.length ? args : ['**'];
-  return getAllDuplicates().then(function(duplicates) {
-    return match(duplicates, patterns).sort();
+  var patterns = Array.prototype.slice.call(arguments);
+  return getAllDuplicates().then(function(all) {
+    var duplicates = patterns.length ? match(all, patterns) : all;
+    return duplicates.sort();
   });
 }
 
@@ -64,16 +67,14 @@ if (require.main === module) {
         // eslint-disable-next-line no-console
         console.warn('Duplicate: %s', duplicate);
       });
-      if (
-        duplicates.length &&
-        process.env.npm_lifecycle_event === 'postinstall'
-      ) {
+      if (duplicates.length) {
         process.exit(1);
       }
     })
     .catch(function(error) {
       // eslint-disable-next-line no-console
       console.error(error);
+      process.exit(1);
     });
 } else {
   module.exports = getDuplicates;
