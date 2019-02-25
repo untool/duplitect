@@ -28,7 +28,8 @@ function getAllDependencies() {
   return new Promise(function(resolve, reject) {
     function handleResult(error, stdout, stderr) {
       if (stdout) {
-        resolve(stdout.split(eol).map(normalize));
+        var lines = stdout.split(eol).slice(1);
+        resolve(lines.map(normalize));
       } else if (stderr) {
         reject(new Error(stderr));
       } else {
