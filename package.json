@@ -1,6 +1,6 @@
 {
   "name": "duplitect",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Package Duplicate Detector",
   "main": "index.js",
   "bin": "index.js",
