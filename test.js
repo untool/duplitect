@@ -9,7 +9,7 @@ test('export test', function(t) {
 });
 
 test('basic API function test', function(t) {
-  return getDuplicates('debug').then(function(duplicates) {
+  return getDuplicates(__dirname, 'debug').then(function(duplicates) {
     t.truthy(duplicates.length, 'duplicate detected');
     t.is(duplicates[0], 'debug', 'expected duplicate found');
   });
