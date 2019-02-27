@@ -5,24 +5,6 @@ var fs = require('fs');
 var path = require('path');
 
 var cwd = process.env.INIT_CWD || process.cwd();
-var event = process.env.npm_lifecycle_event;
-
-function normalize(module) {
-  return module
-    .replace(new RegExp(path.sep, 'g'), '/')
-    .replace(new RegExp('^.*?/((?:@[^/]+/)?[^/]*)$'), '$1');
-}
-
-function match(strings, patterns) {
-  var regExps = patterns.map(function(pattern) {
-    return new RegExp('^' + pattern.replace(/\*+/g, '.*') + '$');
-  });
-  return strings.filter(function(string) {
-    for (var i = 0; i < regExps.length; i++) {
-      if (regExps[i].test(string)) return true;
-    }
-  });
-}
 
 function getAllDependencies() {
   function walk(dir) {
@@ -68,24 +50,34 @@ function getAllDependencies() {
 function getAllDuplicates() {
   return getAllDependencies().then(function(dependencies) {
     return dependencies
-      .map(normalize)
+      .map(function(curr) {
+        return curr
+          .replace(new RegExp(path.sep, 'g'), '/')
+          .replace(new RegExp('^.*?/((?:@[^/]+/)?[^/]*)$'), '$1');
+      })
       .filter(function(curr, index, self) {
         return self.indexOf(curr) !== index;
       })
       .filter(function(curr, index, self) {
         return self.indexOf(curr) === index;
-      });
+      })
+      .sort();
   });
 }
 
 function getDuplicates() {
-  var patterns = Array.prototype.slice.call(arguments);
-  if (!patterns.length && /install/.test(event)) {
-    patterns.push(normalize(process.cwd()));
-  }
-  return getAllDuplicates().then(function(all) {
-    var duplicates = patterns.length ? match(all, patterns) : all;
-    return duplicates.sort();
+  var regExps = Array.prototype.map.call(arguments, function(pattern) {
+    return new RegExp('^' + pattern.replace(/\*+/g, '.*') + '$');
+  });
+  return getAllDuplicates().then(function(duplicates) {
+    if (regExps.length) {
+      return duplicates.filter(function(curr) {
+        for (var i = 0; i < regExps.length; i++) {
+          if (regExps[i].test(curr)) return true;
+        }
+      });
+    }
+    return duplicates;
   });
 }
 
