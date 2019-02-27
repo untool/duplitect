@@ -36,7 +36,7 @@ Duplicate: @untool/core
 
 ### API
 
-#### `getDuplicates([pattern, pattern, ...])`
+#### `getDuplicates(cwd, [pattern, pattern, ...])`
 
 You can also use `duplitect` in your own tools - it only exposes a single function that mimics the CLI functionality. It returns a [`Promise`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise) object that resolves to an array of strings identifying duplicate packages.
 
@@ -45,7 +45,7 @@ You can also use `duplitect` in your own tools - it only exposes a single functi
 ```javascript
 const getDuplicates = require('duplitect');
 
-getDuplicates('untool', '@untool*').then(duplicates => {
+getDuplicates(process.cwd(), 'untool', '@untool*').then(duplicates => {
   duplicates.forEach(duplicate => console.log(`Duplicate: duplicate`));
 });
 ```
