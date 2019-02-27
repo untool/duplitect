@@ -4,9 +4,7 @@
 var fs = require('fs');
 var path = require('path');
 
-var cwd = process.env.INIT_CWD || process.cwd();
-
-function getAllDependencies() {
+function getAllDependencies(cwd) {
   function walk(dir) {
     return new Promise(function(resolve) {
       fs.readdir(dir, function(error, contents) {
@@ -47,8 +45,8 @@ function getAllDependencies() {
   return walk(path.join(cwd, 'node_modules'));
 }
 
-function getAllDuplicates() {
-  return getAllDependencies().then(function(dependencies) {
+function getAllDuplicates(cwd) {
+  return getAllDependencies(cwd).then(function(dependencies) {
     return dependencies
       .map(function(curr) {
         return curr
@@ -65,11 +63,12 @@ function getAllDuplicates() {
   });
 }
 
-function getDuplicates() {
-  var regExps = Array.prototype.map.call(arguments, function(pattern) {
+function getDuplicates(cwd) {
+  var patterns = Array.prototype.slice.call(arguments, 1);
+  var regExps = patterns.map(function(pattern) {
     return new RegExp('^' + pattern.replace(/\*+/g, '.*') + '$');
   });
-  return getAllDuplicates().then(function(duplicates) {
+  return getAllDuplicates(cwd).then(function(duplicates) {
     if (regExps.length) {
       return duplicates.filter(function(curr) {
         for (var i = 0; i < regExps.length; i++) {
@@ -82,8 +81,10 @@ function getDuplicates() {
 }
 
 if (require.main === module) {
+  var cwd = process.env.INIT_CWD || process.cwd();
+  var argv = process.argv.slice(2);
   getDuplicates
-    .apply(null, process.argv.slice(2))
+    .apply(null, [cwd].concat(argv))
     .then(function(duplicates) {
       duplicates.forEach(function(duplicate) {
         // eslint-disable-next-line no-console
