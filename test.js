@@ -9,10 +9,9 @@ test('export test', function(t) {
 });
 
 test('basic API function test', function(t) {
-  return getDuplicates(__dirname, 'debug').then(function(duplicates) {
-    t.truthy(duplicates.length, 'duplicate detected');
-    t.is(duplicates[0], 'debug', 'expected duplicate found');
-  });
+  var duplicates = getDuplicates(__dirname, 'debug');
+  t.truthy(duplicates.length, 'duplicate detected');
+  t.is(duplicates[0], 'debug', 'expected duplicate found');
 });
 
 test('basic CLI function test', function(t) {
