@@ -2,17 +2,12 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
-# [2.0.0](https://github.com/untool/duplitect/compare/v1.1.0...v2.0.0) (2019-03-01)
+## [2.0.1](https://github.com/untool/duplitect/compare/v2.0.0...v2.0.1) (2019-03-21)
 
 
-### Code Refactoring
+### Bug Fixes
 
-* make API synchronous ([a4b346b](https://github.com/untool/duplitect/commit/a4b346b))
-
-
-### BREAKING CHANGES
-
-* getDuplicates now returns a result instead of a promise
+* improve win32 support ([9083503](https://github.com/untool/duplitect/commit/9083503))
 
 
 
