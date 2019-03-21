@@ -34,7 +34,7 @@ function getAllDuplicates(cwd) {
   return getDependencies(cwd)
     .map(function(curr) {
       return curr
-        .replace(new RegExp(path.sep, 'g'), '/')
+        .replace(/\\/g, '/')
         .replace(new RegExp('^.*?/((?:@[^/]+/)?[^/]*)$'), '$1');
     })
     .filter(function(curr, index, self) {
