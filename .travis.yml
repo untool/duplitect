@@ -8,5 +8,6 @@ script:
   - yarn test
 
 node_js:
+  - '10.13'
   - 'node'
   - 'lts/*'
