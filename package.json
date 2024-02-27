@@ -27,9 +27,9 @@
   },
   "homepage": "https://github.com/untool/duplitect#readme",
   "devDependencies": {
-    "@commitlint/cli": "^9.0.0",
-    "@commitlint/config-conventional": "^9.0.0",
-    "@commitlint/travis-cli": "^9.0.0",
+    "@commitlint/cli": "^19.0.0",
+    "@commitlint/config-conventional": "^19.0.0",
+    "@commitlint/travis-cli": "^19.0.0",
     "@untool/eslint-config": "^1.0.0",
     "@untool/prettier-config": "^1.0.0",
     "ava": "^2",
